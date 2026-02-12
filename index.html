@@ -18,13 +18,14 @@
     }
 
     .card {
-        background: rgba(255, 255, 255, 0.96);
+        background: linear-gradient(to bottom right, #fff0f6, #f3e5f5);
         padding: 26px;
         border-radius: 24px;
         text-align: center;
         width: 90%;
         max-width: 360px;
         box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        position: relative;
     }
 
     h1 {
@@ -54,6 +55,11 @@
         position: absolute;
         animation: beat 1.4s infinite;
         transition: transform 0.25s ease, left 0.25s ease, top 0.25s ease;
+        width: 110px;       /* FIXED width */
+        min-width: 110px;
+        max-width: 110px;
+        white-space: nowrap; /* prevent text wrapping */
+        text-align: center;
     }
 
     @keyframes beat {
@@ -66,15 +72,15 @@
         background: #e91e63;
         color: white;
         left: 18%;
+        bottom: 0;
         box-shadow: 0 10px 25px rgba(233,30,99,0.45);
-        bottom: 0; /* fix vertical position */
     }
 
     #no {
         background: #aaa;
         color: white;
-        right: 18%; /* move to right side */
-        bottom: 0; /* fix vertical position */
+        right: 18%;
+        bottom: 0;
     }
 
     .heart {
@@ -91,12 +97,8 @@
 
     /* Mobile adjustments */
     @media (max-width: 500px) {
-        #yes {
-            left: 10%;
-        }
-        #no {
-            right: 10%;
-        }
+        #yes { left: 10%; }
+        #no { right: 10%; }
     }
 </style>
 </head>
@@ -107,7 +109,7 @@
   <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
 </audio>
 
-<div class="card">
+<div class="card" id="mainCard">
     <h1>Kya aap mere Valentine banogi? 💘</h1>
     <p>
         Main aapko kabhi khatam na hone wali muskaan,<br>
@@ -132,13 +134,15 @@
     function escape() {
         clearTimeout(resetTimer);
 
-        // Container dimensions
         const container = document.querySelector(".card");
         const rect = container.getBoundingClientRect();
 
-        // Keep NO inside card
-        const maxX = rect.width - noBtn.offsetWidth;
-        const maxY = rect.height - noBtn.offsetHeight;
+        const btnWidth = noBtn.offsetWidth;
+        const btnHeight = noBtn.offsetHeight;
+
+        // Ensure NO button stays fully inside the card
+        const maxX = rect.width - btnWidth;
+        const maxY = rect.height - btnHeight;
 
         const nx = Math.random() * maxX;
         const ny = Math.random() * maxY;
@@ -150,7 +154,6 @@
         yesScale += 0.15;
         yesBtn.style.transform = `scale(${yesScale})`;
 
-        // Auto-center YES if too big
         if (yesScale > 1.6) {
             yesBtn.style.left = "32%";
         }
@@ -164,13 +167,13 @@
         yesBtn.style.left = "18%";
     }
 
-    // Detect finger proximity (mobile magic ✨)
+    // Touch detection for mobile
     document.addEventListener("touchmove", e => {
         const touch = e.touches[0];
         const rect = noBtn.getBoundingClientRect();
         const dist = Math.hypot(
-            touch.clientX - rect.left,
-            touch.clientY - rect.top
+            touch.clientX - rect.left - rect.width/2,
+            touch.clientY - rect.top - rect.height/2
         );
         if (dist < 80) escape();
     });
@@ -180,12 +183,10 @@
 
     yesBtn.onclick = () => {
         music.play();
-        document.body.innerHTML = `
-            <div class="card">
-                <h1>Love you ji ❤️</h1>
-                <p>Aapne mera din bana diya 💖</p>
-                <p>Happy Valentine’s Day 💝</p>
-            </div>
+        document.getElementById("mainCard").innerHTML = `
+            <h1>Love you ji ❤️</h1>
+            <p>Aapne mera din bana diya 💖</p>
+            <p>Happy Valentine’s Day 💝</p>
         `;
         hearts();
     };
@@ -202,7 +203,7 @@
         }, 240);
     }
 
-    hearts();
+    hearts(); // initial floating hearts
 </script>
 
 </body>
