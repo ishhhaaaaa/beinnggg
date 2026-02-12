@@ -1,190 +1,30 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💖</title>
+.buttons {
+    position: relative;
+    height: 120px;
+    margin-top: 10px;
+}
 
-<style>
-    body {
-        margin: 0;
-        height: 100vh;
-        background: url("https://images.unsplash.com/photo-1518893063532-6c2a3d83e7a2")
-        center/cover no-repeat;
-        overflow: hidden;
-        font-family: 'Segoe UI', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+button {
+    padding: 14px 24px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    animation: beat 1.4s infinite;
+    transition: all 0.25s ease;
+}
 
-    .card {
-        background: rgba(255, 255, 255, 0.96);
-        padding: 26px;
-        border-radius: 24px;
-        text-align: center;
-        width: 90%;
-        max-width: 360px;
-        box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-    }
+#yes {
+    background: #e91e63;
+    color: white;
+    left: 20%;
+    bottom: 10px;
+}
 
-    h1 {
-        color: #e91e63;
-        font-size: 24px;
-        margin-bottom: 12px;
-    }
-
-    p {
-        font-size: 15px;
-        color: #444;
-        line-height: 1.6;
-        margin-bottom: 22px;
-    }
-
-    .buttons {
-        position: relative;
-        height: 90px;
-    }
-
-    button {
-        padding: 14px 28px;
-        font-size: 17px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        position: absolute;
-        animation: beat 1.4s infinite;
-        transition: transform 0.25s ease, left 0.25s ease;
-    }
-
-    @keyframes beat {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.12); }
-        100% { transform: scale(1); }
-    }
-
-    #yes {
-        background: #e91e63;
-        color: white;
-        left: 18%;
-        box-shadow: 0 10px 25px rgba(233,30,99,0.45);
-    }
-
-    #no {
-        background: #aaa;
-        color: white;
-        left: 52%;
-    }
-
-    .heart {
-        position: fixed;
-        bottom: -20px;
-        font-size: 22px;
-        animation: floatUp linear infinite;
-        pointer-events: none;
-    }
-
-    @keyframes floatUp {
-        to { transform: translateY(-110vh); opacity: 0; }
-    }
-</style>
-</head>
-
-<body>
-
-<audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
-</audio>
-
-<div class="card">
-    <h1>Kya aap mere Valentine banogi? 💘</h1>
-    <p>
-        Main aapko kabhi khatam na hone wali muskaan,<br>
-        pyaar aur bohot saari chocolates 🍫<br>
-        ka wada karta hoon.
-    </p>
-
-    <div class="buttons">
-        <button id="yes">Yes 💖</button>
-        <button id="no">No 😢</button>
-    </div>
-</div>
-
-<script>
-    const noBtn = document.getElementById("no");
-    const yesBtn = document.getElementById("yes");
-    const music = document.getElementById("music");
-
-    let yesScale = 1;
-    let resetTimer;
-
-    function escape(x, y) {
-        clearTimeout(resetTimer);
-
-        const nx = Math.random() * (window.innerWidth - 120);
-        const ny = Math.random() * (window.innerHeight - 140);
-
-        noBtn.style.left = nx + "px";
-        noBtn.style.top = ny + "px";
-
-        // YES grows faster (mobile-friendly)
-        yesScale += 0.15;
-        yesBtn.style.transform = `scale(${yesScale})`;
-
-        // Auto-center YES when big
-        if (yesScale > 1.6) {
-            yesBtn.style.left = "32%";
-        }
-
-        resetTimer = setTimeout(reset, 1800);
-    }
-
-    function reset() {
-        noBtn.style.left = "52%";
-        noBtn.style.top = "auto";
-        yesBtn.style.left = "18%";
-    }
-
-    // Detect finger proximity (mobile magic ✨)
-    document.addEventListener("touchmove", e => {
-        const touch = e.touches[0];
-        const rect = noBtn.getBoundingClientRect();
-        const dist = Math.hypot(
-            touch.clientX - rect.left,
-            touch.clientY - rect.top
-        );
-        if (dist < 80) escape();
-    });
-
-    noBtn.addEventListener("touchstart", escape);
-    noBtn.addEventListener("click", escape);
-
-    yesBtn.onclick = () => {
-        music.play();
-        document.body.innerHTML = `
-            <div class="card">
-                <h1>Love you ji ❤️</h1>
-                <p>Aapne mera din bana diya 💖</p>
-                <p>Happy Valentine’s Day 💝</p>
-            </div>
-        `;
-        hearts();
-    };
-
-    function hearts() {
-        setInterval(() => {
-            const h = document.createElement("div");
-            h.className = "heart";
-            h.innerHTML = "💖";
-            h.style.left = Math.random() * 100 + "vw";
-            h.style.animationDuration = (Math.random()*3 + 2) + "s";
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 5000);
-        }, 240);
-    }
-
-    hearts();
-</script>
-
-</body>
-</html>
+#no {
+    background: #aaa;
+    color: white;
+    right: 20%;
+    bottom: 10px;
+}
