@@ -43,11 +43,15 @@
 
     .buttons {
         position: relative;
+        width: 100%;
         height: 90px;
     }
 
     button {
-        padding: 14px 28px;
+        width: 110px;        /* FIXED width */
+        height: 50px;        /* FIXED height */
+        padding: 0;          /* remove padding to prevent resizing */
+        box-sizing: border-box; 
         font-size: 17px;
         border-radius: 30px;
         border: none;
@@ -55,11 +59,8 @@
         position: absolute;
         animation: beat 1.4s infinite;
         transition: transform 0.25s ease, left 0.25s ease, top 0.25s ease;
-        width: 110px;       /* FIXED width */
-        min-width: 110px;
-        max-width: 110px;
-        white-space: nowrap; /* prevent text wrapping */
         text-align: center;
+        white-space: nowrap;
     }
 
     @keyframes beat {
@@ -106,15 +107,16 @@
 <body>
 
 <audio id="music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">
+  <!-- Romantic instrumental track -->
+  <source src="https://assets.mixkit.co/music/preview/mixkit-romantic-01-738.mp3" type="audio/mpeg">
 </audio>
 
 <div class="card" id="mainCard">
     <h1>Kya aap mere Valentine banogi? 💘</h1>
     <p>
         Main aapko kabhi khatam na hone wali muskaan,<br>
-        pyaar aur bohot saari chocolates 🍫<br>
-        ka wada karta hoon.
+        pyaar aur unlimited shopping 🛍️ ka<br>
+        wada karta hoon 😘.
     </p>
 
     <div class="buttons">
@@ -140,7 +142,7 @@
         const btnWidth = noBtn.offsetWidth;
         const btnHeight = noBtn.offsetHeight;
 
-        // Ensure NO button stays fully inside the card
+        // Keep NO button fully inside the card
         const maxX = rect.width - btnWidth;
         const maxY = rect.height - btnHeight;
 
@@ -154,38 +156,31 @@
         yesScale += 0.15;
         yesBtn.style.transform = `scale(${yesScale})`;
 
-        if (yesScale > 1.6) {
-            yesBtn.style.left = "32%";
-        }
-
-        resetTimer = setTimeout(reset, 1800);
-    }
-
-    function reset() {
-        noBtn.style.left = "";
-        noBtn.style.top = "";
-        yesBtn.style.left = "18%";
+        resetTimer = setTimeout(() => {
+            noBtn.style.left = "";
+            noBtn.style.top = "";
+            yesBtn.style.left = "18%";
+        }, 1800);
     }
 
     // Touch detection for mobile
     document.addEventListener("touchmove", e => {
         const touch = e.touches[0];
         const rect = noBtn.getBoundingClientRect();
-        const dist = Math.hypot(
-            touch.clientX - rect.left - rect.width/2,
-            touch.clientY - rect.top - rect.height/2
-        );
-        if (dist < 80) escape();
+        if (Math.hypot(touch.clientX - (rect.left + rect.width / 2),
+                       touch.clientY - (rect.top + rect.height / 2)) < 80) {
+            escape();
+        }
     });
 
     noBtn.addEventListener("touchstart", escape);
     noBtn.addEventListener("click", escape);
 
     yesBtn.onclick = () => {
-        music.play();
+        music.play(); // play romantic music
         document.getElementById("mainCard").innerHTML = `
             <h1>Love you ji ❤️</h1>
-            <p>Aapne mera din bana diya 💖</p>
+            <p>mera din ban gya ji..shukriya 🫂💕</p>
             <p>Happy Valentine’s Day 💝</p>
         `;
         hearts();
@@ -197,13 +192,13 @@
             h.className = "heart";
             h.innerHTML = "💖";
             h.style.left = Math.random() * 100 + "vw";
-            h.style.animationDuration = (Math.random()*3 + 2) + "s";
+            h.style.animationDuration = (Math.random() * 3 + 2) + "s";
             document.body.appendChild(h);
             setTimeout(() => h.remove(), 5000);
         }, 240);
     }
 
-    hearts(); // initial floating hearts
+    hearts(); // start floating hearts immediately
 </script>
 
 </body>
